@@ -366,7 +366,6 @@ class EcovacsQuickCommandButton(EcovacsDescriptionEntity[Capabilities], ButtonEn
             device.device_info["did"], qcid
         )
         self._qcid = qcid
-        self._scene = dict(scene)
         self._settled = asyncio.Event()
         # Runs both on a normal add and on an aborted add (disabled entity).
         self.async_on_remove(self._settled.set)
@@ -383,7 +382,6 @@ class EcovacsQuickCommandButton(EcovacsDescriptionEntity[Capabilities], ButtonEn
     @callback
     def async_update_scene(self, scene: Mapping[str, Any]) -> None:
         """Apply updated scene data; the unique id never changes."""
-        self._scene = dict(scene)
         name = _scene_name(scene, self._qcid)
         if self.entity_description.name != name:
             self.entity_description = ButtonEntityDescription(

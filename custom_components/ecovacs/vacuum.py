@@ -62,7 +62,7 @@ async def async_setup_entry(
     vacuums.extend(
         [EcovacsLegacyVacuum(device) for device in controller.legacy_devices]
     )
-    _LOGGER.debug("Adding Ecovacs Vacuums to Home Assistant: %s", vacuums)
+    _LOGGER.debug("Adding %d Ecovacs vacuums to Home Assistant", len(vacuums))
     async_add_entities(vacuums)
 
 
@@ -290,7 +290,6 @@ class EcovacsVacuum(
 
             async def on_rooms(event: RoomsEvent) -> None:
                 self._room_event = event
-                _LOGGER.warning("X5 DEBUG ROOMS: map_id=%s rooms=%s", event.map_id, event.rooms)
                 self._check_segments_changed()
                 self.async_write_ha_state()
 
@@ -298,7 +297,6 @@ class EcovacsVacuum(
 
             async def on_map_info(event: CachedMapInfoEvent) -> None:
                 self._maps = {map_obj.id: map_obj for map_obj in event.maps}
-                _LOGGER.warning("X5 DEBUG MAPS: %s", self._maps)
                 self._check_segments_changed()
 
             self._subscribe(map_caps.cached_info.event, on_map_info)
@@ -442,7 +440,7 @@ class EcovacsVacuum(
         **kwargs: Any,
     ) -> None:
         """Send a command to a vacuum cleaner."""
-        _LOGGER.debug("async_send_command %s with %s", command, params)
+        _LOGGER.debug("async_send_command %s", command)
         if params is None:
             params = {}
         elif isinstance(params, list):
@@ -579,18 +577,9 @@ class EcovacsVacuum(
                 continue
 
             if not map_obj.using:
-                room_name = next(
-                    (
-                        segment.name
-                        for segment in self.last_seen_segments or []
-                        if segment.id == composite_id
-                    ),
-                    "",
-                )
                 _LOGGER.warning(
-                    'Map "%s" is not currently selected, skipping segment "%s" (%s)',
-                    map_obj.name,
-                    room_name,
+                    "Map %s is not currently selected, skipping segment %s",
+                    map_id,
                     segment_id,
                 )
                 continue

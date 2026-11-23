@@ -12,7 +12,8 @@ saved cleaning scenes to the standard Ecovacs integration.
   `qcid` identifier.
 - Starts a scene with a verified payload (`clean_V2` / `qcClean`).
 - Never starts a cleaning task during discovery.
-- Exposes the last scene list in the `quick_commands` attribute of the vacuum entity.
+- Exposes the last scene identifiers and names in the `quick_commands` attribute
+  of the vacuum entity; unrelated robot payload fields are not retained.
 - Refreshes the list with the standard `homeassistant.update_entity` service on
   the vacuum entity.
 
@@ -28,6 +29,8 @@ hardware-profile patch and no model-specific mapping.
 - Duplicate QCIDs are ignored and removals are processed before additions.
 - Buttons are removed from the entity registry when a scene disappears.
 - Explicit refresh uses `async_update(force=True)`; no periodic polling is added.
+- Home Assistant diagnostics are collected only when the user downloads them;
+  no automatic, periodic or persistent debug collection is added.
 
 ## Compatibility
 

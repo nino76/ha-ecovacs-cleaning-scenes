@@ -211,11 +211,10 @@ class EcovacsController:
             for device_config in devices.not_supported:
                 _LOGGER.warning(
                     (
-                        'Device "%s" not supported. More information at '
-                        "https://github.com/DeebotUniverse/client.py/issues/612: %s"
+                        'Device class "%s" not supported. More information at '
+                        "https://github.com/DeebotUniverse/client.py/issues/612"
                     ),
-                    device_config["deviceName"],
-                    device_config,
+                    device_config.get("class", "unknown"),
                 )
 
         except DeviceVerificationRequiredError as ex:

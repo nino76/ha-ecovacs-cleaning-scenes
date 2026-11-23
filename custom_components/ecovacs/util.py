@@ -99,5 +99,7 @@ def parse_quick_commands(response: Any) -> list[dict[str, Any]] | None:
     ):
         return None
 
-    # Keep every original field (qcid, name, icon, mid, type, state, content, ...)
-    return [dict(scene) for scene in scenes]
+    # Only the QCID and the displayed name are needed to create, update and
+    # remove the scene buttons. Do not retain unrelated robot payload fields
+    # in memory or expose them in the vacuum entity attribute.
+    return [{"qcid": scene["qcid"], "name": scene.get("name")} for scene in scenes]
